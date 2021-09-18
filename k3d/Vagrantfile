@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
 
   # Forwarded port mapping: 8052 -> 8502 for exposed service
   config.vm.network "forwarded_port", guest: 8502, host: 8502
-  # Forwarded port mapping: 8052 -> 8502 for kubernetes dasboard
+  # Forwarded port mapping: 8053 -> 8503 for kubernetes dasboard
   config.vm.network "forwarded_port", guest: 8503, host: 8503
 
   # Create a private network, which allows host-only access to the machine
