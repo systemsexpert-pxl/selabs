@@ -1,3 +1,3 @@
 # pxl-environments
 
-PXL System Expert exercise environments
+PXL Systems Expert exercise environments
