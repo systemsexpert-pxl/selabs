@@ -1,0 +1,50 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  # https://app.vagrantup.com/hashicorp/boxes/bionic64
+  config.vm.box = "ubuntu/focal64"
+
+  config.vm.box_check_update = true
+
+  # Forwarded port mapping: 8052 -> 8502 for exposed service
+  config.vm.network "forwarded_port", guest: 8502, host: 8502
+  # Forwarded port mapping: 8052 -> 8502 for kubernetes dasboard
+  config.vm.network "forwarded_port", guest: 8503, host: 8503
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  config.vm.network "private_network", ip: "192.168.33.15"
+
+  # Share an additional folder to the guest VM
+  config.vm.synced_folder "./shared", "/vagrant_data"
+
+  # Customize the disk size on the guest VM: (using vagrant-disksize plugin)
+  config.disksize.size = '80GB'
+
+    # Customize hostname of the guestVM
+  config.vm.hostname = "k3d-cluster"
+
+  config.vm.provider "virtualbox" do |vb|
+    # Customize the amount of memory on the guest VM:
+    vb.memory = 6144
+    vb.cpus = 4
+end
+
+  # Enable provisioning guest VM with shell script
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update -y
+
+    # Install Docker
+    # Reference: https://docs.docker.com/engine/install/ubuntu/
+    curl -sSL https://get.docker.com/ | sh
+    usermod -a -G docker vagrant
+
+    # Install k3d
+    # Reference: https://github.com/rancher/k3d
+    wget -q -O - https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
+
+    # Install kubectl
+    snap install kubectl --classic
+  SHELL
+end
