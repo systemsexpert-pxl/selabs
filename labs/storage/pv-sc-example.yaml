@@ -13,4 +13,4 @@ spec:
   persistentVolumeReclaimPolicy: Delete
   hostPath:
     type: DirectoryOrCreate
-    path: "/tmp/mypvsc"
+    path: "/data/mypvsc"
