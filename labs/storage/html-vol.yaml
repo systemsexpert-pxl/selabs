@@ -13,7 +13,7 @@ spec:
   persistentVolumeReclaimPolicy: Delete
   hostPath:
     type: DirectoryOrCreate
-    path: "/tmp/html"
+    path: "/data/html"
 
 ---
 
