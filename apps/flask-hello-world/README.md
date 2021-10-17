@@ -52,3 +52,12 @@ The flask app can be easily containerzied by using the official `python:3.8` ima
   https://docs.docker.com/docker-hub/
 - Exposing services on k3d<br>
   https://k3d.io/usage/guides/exposing_services/
+
+## Troubleshooting
+
+- Always run `kubectl get events -A -w` to screen for issues
+- `kubectl logs` to check pod logs
+- Kube DNS check `kubectl run -it --rm --restart=Never busybox --image=busybox:1.28 -- nslookup $YOUR_DNS_NAME_WITH_NAMESPACE`
+- `kubectl describe svc` and `kubectl describe endpoint`
+- logon to the k3s instance (docker) with docker excec
+- if you're lazy, use [Lens](https://k8slens.dev) for all of the above :^)
