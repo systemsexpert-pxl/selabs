@@ -42,7 +42,7 @@ python ./app
 
 ### Containerizing
 
-The flask app can be easibly containerzied by using the official `python:3.8` image on docker hub.
+The flask app can be easily containerzied by using the official `python:3.8` image on docker hub.
 
 ## Useful tips
 
