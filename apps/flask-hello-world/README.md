@@ -7,7 +7,7 @@ Given a python flask web app that runs a web server on port 5000, deploy this ap
 Steps:
 
 - Containerize using a Dockerfile
-- Push the file to docker hub
+- Push the image to docker hub
 - Create a kubernetes deployment
 
 ## flask-hello-world
