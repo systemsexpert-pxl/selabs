@@ -46,9 +46,9 @@ The flask app can be easily containerzied by using the official `python:3.8` ima
 
 ## Useful tips
 
-- Writing Dockerfiles
+- Writing Dockerfiles<br>
   https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
-- Docker Hub Quickstart
+- Docker Hub Quickstart<br>
   https://docs.docker.com/docker-hub/
-- Exposing services on k3d
+- Exposing services on k3d<br>
   https://k3d.io/usage/guides/exposing_services/
