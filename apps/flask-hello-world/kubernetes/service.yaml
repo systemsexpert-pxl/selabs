@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-hello-service
+spec:
+  selector:
+    app: flask-hello-world
+  ports:
+    - protocol: "TCP"
+      port: 6000
+      targetPort: 5000
