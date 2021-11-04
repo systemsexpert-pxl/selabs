@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: mykubeapp
-        image: nanajanashia/argocd-app:1.2
+        image: tomcoolpxl/mykubeapp:1.0
         ports:
         - containerPort: 8080
