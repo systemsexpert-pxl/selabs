@@ -11,10 +11,10 @@
 	<groupId>be.pxl</groupId>
 	<artifactId>simplewebservice</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>SimpleWebService</name>
-	<description>Demo web spring boot service for systems-expert labs</description>
+	<name>simplewebservice</name>
+	<description>demo spring boot rest api for systems expert labs</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>1.8</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
