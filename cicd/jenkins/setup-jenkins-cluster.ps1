@@ -4,6 +4,7 @@
 # 8443 -> 443 op traefik
 # 800x -> nodeports 3000x op de agent nodes
 # volume!
+mkdir jenkins_data
 k3d cluster create --api-port 6550 -p "8880:80@loadbalancer" -p "8000:30000@agent:0" -p "8001:30000@agent:1" -p "8443:443@loadbalancer" --agents 2 --servers 2 my-cluster --volume C:\Users\thraa\system-expert\cicd\jenkins_data:/data
 k3d kubeconfig get my-cluster > C:\Users\thraa\k3d\kubeconfig
 $KUBECONFIG = "$HOME\k3d\kubeconfig"
