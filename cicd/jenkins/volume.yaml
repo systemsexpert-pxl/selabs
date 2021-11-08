@@ -2,13 +2,15 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: jenkins-pv-volume
-  namespace: jenkins
   labels:
     type: local
 spec:
   storageClassName: manual
+  claimRef:
+    name: jenkins-pv-claim
+    namespace: devops-tools
   capacity:
-    storage: 1Gi
+    storage: 6Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
@@ -17,12 +19,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jenkins-claim
-  namespace: jenkins
+  name: jenkins-pv-claim
+  namespace: devops-tools
 spec:
   storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 3Gi
