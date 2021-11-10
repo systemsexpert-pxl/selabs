@@ -34,9 +34,6 @@ kubectl get pods --namespace devops-tools
 # UI accessible op nodeport 30000
 kubectl create -f service.yaml
 
-# set up ingress voor jenkins
-# kubectl create -f ingress.yaml
-
 # checks
 kubectl get nodes -o wide
 kubectl get services --namespace devops-tools
