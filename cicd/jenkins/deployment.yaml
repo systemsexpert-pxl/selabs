@@ -20,6 +20,9 @@ spec:
       containers:
         - name: jenkins
           image: jenkins/jenkins:lts
+          env:
+            - name: JAVA_OPTS
+              value: "-Djenkins.model.Jenkins.crumbIssuerProxyCompatibility=true"
           resources:
             limits:
               memory: "2Gi"
