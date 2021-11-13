@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mykubeapp
+  name: simplewebservice
 spec:
   selector:
     matchLabels:
-      app: mykubeapp
+      app: simplewebservice
   replicas: 3
   template:
     metadata:
       labels:
-        app: mykubeapp
+        app: simplewebservice
     spec:
       containers:
-      - name: mykubeapp
-        image: tomcoolpxl/mykubeapp:1.0
-        ports:
-        - containerPort: 8080
+        - name: simplewebservice
+          image: tomcoolpxl/simplewebservice:0.2
+          ports:
+            - containerPort: 8080
