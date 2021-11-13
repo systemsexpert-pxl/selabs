@@ -6,10 +6,19 @@
 # volume!
 rm -r -fo jenkins_data
 mkdir jenkins_data
-k3d cluster create --api-port 6550 -p "8880:80@loadbalancer" -p "8000:30000@agent[0]" -p "8001:30000@agent[1]" -p "8443:443@loadbalancer" --agents 2 --servers 2 my-cluster --volume C:\Users\thraa\system-expert\cicd\jenkins\jenkins_data:/data
-k3d kubeconfig get my-cluster > C:\Users\thraa\k3d\kubeconfig
+# create cluster with k3d config file
+k3d cluster create --config .\k3d-config.yaml
+$clustername=my-ci-cluster
+# $clustername = $(cat .\k3d-config.yaml | Select-String -Pattern 'name: ').Line.Remove(0, 6)
+# extract kubeconfig
 $KUBECONFIG = "$HOME\k3d\kubeconfig"
+k3d kubeconfig get $clustername > $KUBECONFIG
+# cluster info check
 kubectl cluster-info
+
+# prevent useage of server nodes
+kubectl taint node k3d-$clustername-server-0 node-role.kubernetes.io/master:NoSchedule
+kubectl taint node k3d-$clustername-server-1 node-role.kubernetes.io/master:NoSchedule
 
 # separate namespace
 kubectl create namespace devops-tools
@@ -38,9 +47,10 @@ kubectl create -f service.yaml
 kubectl get nodes -o wide
 kubectl get services --namespace devops-tools
 kubectl get pods --namespace devops-tools -o wide
-kubectl logs --namespace devops-tools <jenkins-pod-name>
-# kubectl exec -it <jenkins-pod-name> cat  /var/jenkins_home/secrets/initialAdminPassword -n devops-tools
-# alternatief kubectl port-forward service/jenkins 6420:8080 --namespace jenkins
+$jenkinspod = $(kubectl get pods --namespace devops-tools -o wide | Select-String jenkins-..........-.....).Matches.Value
+kubectl logs --namespace devops-tools $jenkinspod
+kubectl exec -it $jenkinspod cat  /var/jenkins_home/secrets/initialAdminPassword -n devops-tools
+# alternatief: kubectl port-forward service/jenkins-service 6420:8080 --namespace jenkins
 # browse naar localhost:8000
 
 $dockerserver = 'https://index.docker.io/v1/'

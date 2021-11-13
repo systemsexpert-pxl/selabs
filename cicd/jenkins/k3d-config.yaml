@@ -1,0 +1,37 @@
+kind: Simple
+apiVersion: k3d.io/v1alpha3
+name: my-ci-cluster
+servers: 2
+agents: 2
+kubeAPI:
+  hostIP: 0.0.0.0
+  hostPort: "6443"
+volumes:
+  - volume: C:\Users\thraa\system-expert\cicd\jenkins\jenkins_data:/data
+    nodeFilters:
+      - agent:*
+ports:
+  - port: 8080:80
+    nodeFilters:
+      - loadbalancer
+  - port: 0.0.0.0:8443:443
+    nodeFilters:
+      - loadbalancer
+  - port: 8000:30000
+    nodeFilters:
+      - agent:0
+  - port: 8001:30000
+    nodeFilters:
+      - agent:1
+options:
+  k3d:
+    disableLoadbalancer: false
+  k3s:
+    extraArgs:
+      - arg: --tls-san=127.0.0.1
+        nodeFilters:
+          - server:*
+    nodeLabels: []
+  kubeconfig:
+    updateDefaultKubeconfig: true
+    switchCurrentContext: true
