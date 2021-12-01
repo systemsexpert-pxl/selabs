@@ -1,6 +1,6 @@
 # create cluster with k3d config file
-k3d mycluster create --config .\k3d-config.yaml
 $clustername = "mycluster"
+k3d $clustername create --config .\k3d-config.yaml
 # $clustername = $(cat .\k3d-config.yaml | Select-String -Pattern 'name: ').Line.Remove(0, 6)
 # extract kubeconfig
 $KUBECONFIG = "$HOME\k3d\kubeconfig"
