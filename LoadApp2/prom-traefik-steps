@@ -1,0 +1,31 @@
+# traefik
+helm repo add traefik https://helm.traefik.io/traefik
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+
+helm install traefik traefik/traefik -n kube-system -f ./traefik/traefik-values.yaml
+kubectl apply -f ./traefik/traefik-dashboard-service.yaml
+
+# prometheus
+helm install prometheus-stack prometheus-community/kube-prometheus-stack --values prometheus/kube-prometheus-stack-values.yaml
+
+kubectl apply -f prometheus/traefik-service-monitor.yaml
+kubectl apply -f prometheus/traefik-rules.yaml
+
+# forward prometheus dashboard
+
+# grafana
+# admin, prom-operator
+# chart 12541
+
+# install app
+kubectl apply -f ./application/httpbin.yaml
+# test app
+curl -I http://localhost:8081/  -H "host:httpbin.local"
+
+# install ab (apache)
+ab -c 5 -n 10000  -m PATCH -H "host:httpbin.local" -H "accept: application/json" http://localhost:8081/patch
+ab -c 5 -n 10000  -m GET -H "host:httpbin.local" -H "accept: application/json" http://localhost:8081/get
+ab -c 5 -n 10000  -m POST -H "host:httpbin.local" -H "accept: application/json" http://localhost:8081/post
+
+# forward alertmanager dashboard

@@ -1,0 +1,32 @@
+# deploy de workload
+kubectl apply -f application/php-apache.yaml
+
+# maak een HorizontalPodAutoscaler aan
+kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
+
+# check de status
+kubectl get horizontalpodautoscaler
+kubectl get hpa
+kubectl top pod php-apache-...
+
+# add load vanuit de cluster
+# run dit in een aparte terminal
+# start een tijdelijke busybox container die het endpoint blijft consumen
+kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
+# run dit in eerste terminal
+# check hpa status
+# hogere CPU load zou snel moeten duidelijk worden
+# meer replica's worden gestart
+kubectl get hpa php-apache --watch
+
+# check actual state van de deployment
+kubectl get deployment php-apache
+
+# stop de load
+# <CTRL>+C in 2de terminal
+
+# check hpa status, replicas
+kubectl get hpa php-apache --watch
+
+# check deployment actual state
+kubectl get deployment php-apache
