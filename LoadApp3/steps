@@ -1,0 +1,66 @@
+# install linkerd cli https://github.com/linkerd/linkerd2/releases/
+# linux:
+# curl -fsL https://run.linkerd.io/install | sh
+# windows
+# choco install linkerd2
+
+linkerd version
+
+# setup default cluster
+
+# check cluster voor linkerd
+linkerd check --pre
+
+# install linkerd control plane
+linkerd install | kubectl apply -f -
+# linkerd install | sed s/cluster\.local/k3d-my-cluster/ | kubectl apply -f -
+
+# verify
+linkerd check
+
+# deploy application
+# note: automatisch goede namespace
+kubectl apply -f ./application/emojivoto.yaml
+
+# forward service
+#kubectl -n emojivoto port-forward svc/web-svc 8888:80
+
+# add application to mesh
+kubectl get -n emojivoto deploy -o yaml | linkerd inject - | kubectl apply -f -
+
+# verify
+linkerd -n emojivoto check --proxy
+
+# install the on-cluster metrics stack
+linkerd viz install | kubectl apply -f -
+
+# verify
+linkerd check
+
+# launch dashboard
+#linkerd viz dashboard
+
+# install prometheus adapter
+# https://github.com/kubernetes-sigs/prometheus-adapter
+helm install prometheus-adapter stable/prometheus-adapter -f ./prometheus/prometheus-adapter-config.yaml
+#helm -n linkerd --namespace linkerd install stable/prometheus-adapter -f ./prometheus/prometheus-adapter-config.yaml
+
+# install jq
+# windows
+# https://scoop.sh/
+scoop install jq
+# linux
+sudo apt install jq
+
+# juiste metrics?
+kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 | jq .
+
+# metrics via cli
+linkerd -n emojivoto stat deploy
+
+# install hpa
+kubectl create -f application/emojivoto-hpa.yaml --namespace emojivoto
+
+# check
+kubectl get hpa --namespace emojivoto
+
