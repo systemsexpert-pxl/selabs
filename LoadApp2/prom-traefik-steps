@@ -1,31 +1,52 @@
-# traefik
+# set-up cluster; disable ingebouwde traefik
+
+# traefik repo's
 helm repo add traefik https://helm.traefik.io/traefik
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 
+# traefik install
 helm install traefik traefik/traefik -n kube-system -f ./traefik/traefik-values.yaml
+# servide voor traefik-dashboard
 kubectl apply -f ./traefik/traefik-dashboard-service.yaml
 
-# prometheus
+# toon traefik dashboard
+kubectl port-forward service/traefik-dashboard 9000:9000 -n kube-system
+http://localhost:9000/dashboard/
+# toon traefik-dashboard metrics endpoint
+# bv traefik_entrypoint_open_connections
+http://localhost:9000/metrics
+
+# prometheus stack deployment
 helm install prometheus-stack prometheus-community/kube-prometheus-stack --values prometheus/kube-prometheus-stack-values.yaml
 
+# we verbinden prometheus met het /metrics endpoint van traefik-dashboard service
 kubectl apply -f prometheus/traefik-service-monitor.yaml
+# rules worden op deze manier declaratively gedefinieerd
 kubectl apply -f prometheus/traefik-rules.yaml
 
 # forward prometheus dashboard
+kubectl port-forward service/prometheus-stack-kube-prom-prometheus 9090:9090
 
-# grafana
-# admin, prom-operator
+# serviceMonitor/default/traefik/0 target is aanwezig
+http://localhost:9090/targets
+# TooManyRequests target rule is available
+http://localhost:9090/rules
+
+# grafana doashboard
+kubectl port-forward service/prometheus-stack-grafana 9191:80
+# username: admin, password: prom-operator
 # chart 12541
+# bv graph met sum(traefik_entrypoint_open_connections) by (method)
 
 # install app
 kubectl apply -f ./application/httpbin.yaml
 # test app
 curl -I http://localhost:8081/  -H "host:httpbin.local"
 
-# install ab (apache)
-ab -c 5 -n 10000  -m PATCH -H "host:httpbin.local" -H "accept: application/json" http://localhost:8081/patch
-ab -c 5 -n 10000  -m GET -H "host:httpbin.local" -H "accept: application/json" http://localhost:8081/get
-ab -c 5 -n 10000  -m POST -H "host:httpbin.local" -H "accept: application/json" http://localhost:8081/post
+# generate load: quick install of ab (apache)
+ab -c 5 -n 200000  -m PATCH -H "host:httpbin.local" -H "accept: application/json" http://localhost:8081/patch
+ab -c 5 -n 200000  -m GET -H "host:httpbin.local" -H "accept: application/json" http://localhost:8081/get
+ab -c 5 -n 200000  -m POST -H "host:httpbin.local" -H "accept: application/json" http://localhost:8081/post
 
 # forward alertmanager dashboard

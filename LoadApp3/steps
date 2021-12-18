@@ -38,29 +38,23 @@ linkerd viz install | kubectl apply -f -
 linkerd check
 
 # launch dashboard
-#linkerd viz dashboard
+linkerd viz dashboard --port 7777
 
+# -- ignore --
 # install prometheus adapter
 # https://github.com/kubernetes-sigs/prometheus-adapter
-helm install prometheus-adapter stable/prometheus-adapter -f ./prometheus/prometheus-adapter-config.yaml
-#helm -n linkerd --namespace linkerd install stable/prometheus-adapter -f ./prometheus/prometheus-adapter-config.yaml
-
+#helm install prometheus-adapter stable/prometheus-adapter -f ./prometheus/prometheus-adapter-config.yaml --namespace linkerd
 # install jq
 # windows
 # https://scoop.sh/
-scoop install jq
+#scoop install jq
 # linux
-sudo apt install jq
-
+#sudo apt install jq
 # juiste metrics?
-kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 | jq .
-
+#kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 | jq .
 # metrics via cli
-linkerd -n emojivoto stat deploy
-
+#linkerd -n emojivoto stat deploy
 # install hpa
-kubectl create -f application/emojivoto-hpa.yaml --namespace emojivoto
-
+#kubectl create -f application/emojivoto-hpa.yaml --namespace emojivoto
 # check
-kubectl get hpa --namespace emojivoto
-
+#kubectl get hpa --namespace emojivoto
